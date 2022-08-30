@@ -5,16 +5,7 @@
  LICENSE.txt
  */
 
-/*
- After changing this file, it is necessary to run `python setup.py antlr` in the root directory of
- the repository. This will regenerate the code in `sympy/parsing/latex/_antlr/*.py`.
- */
-
 grammar LaTeX;
-
-options {
-	language = Python2;
-}
 
 WS: [ \t\r\n]+ -> skip;
 THINSPACE: ('\\,' | '\\thinspace') -> skip;
