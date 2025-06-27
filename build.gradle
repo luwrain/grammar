@@ -3,8 +3,6 @@ plugins {
     id 'antlr'
 }
 
-group = 'org.luwrain'
-//version = '2.0.0-pre2'
 
 dependencies {
     antlr 'org.antlr:antlr4:4.13.1'
@@ -14,27 +12,9 @@ dependencies {
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
 }
 
-task testGen (type: JavaExec) {
-    dependsOn configurations.compileClasspath
-
-    classpath = configurations.compileClasspath
-    main = 'org.antlr.v4.Tool'
-    args = ['-o', 'src/main/java', 'path/to/your/grammar.g4']
-}
-
-
 tasks.named('generateGrammarSource') {
 	enabled = true 
 }
-
-//generateGrammarSource {
-//   source = files(
-//        'src/main/antlr/org/luwrain/antlr/js/JavaScriptLexer.g4',
-//        'src/main/antlr/org/luwrain/antlr/js/JavaScriptParser.g4'
-//    )
-//    arguments += ['-visitor', '-long-messages']
-//    outputDirectory = file("build/generated")
-//}
 
 def antlrOutputDirJs = file("$buildDir/generated/org/luwrain/antlr/js")
 def antlrOutputDirLy = file("$buildDir/generated/org/luwrain/anylr/ly")
@@ -89,6 +69,6 @@ sourceSets {
 	}
 }
 jar {
-  archiveBaseName.set('luwrain-grammar-2.0.0pre2')
+  archiveBaseName.set('luwrain-grammar')
   archiveVersion.set(null)
 }
