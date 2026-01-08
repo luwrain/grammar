@@ -1,19 +1,19 @@
 plugins {
-    id 'java-library'
-    id 'antlr'
+  id 'java-library'
+  id 'antlr'
 }
 
-
 dependencies {
-    antlr 'org.antlr:antlr4:4.13.1'
-        implementation 'org.antlr:antlr4:4.13.1'
-    implementation 'org.antlr:antlr4-runtime:4.13.1'
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+  antlr libraries.antlr
+  implementation libraries.antlr
+  implementation libraries.antlrrt
+  implementation project(":luwrain")
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
 }
 
 tasks.named('generateGrammarSource') {
-	enabled = true 
+  enabled = true 
 }
 
 def antlrOutputDirJs = file("$buildDir/generated/org/luwrain/antlr/js")
@@ -21,22 +21,22 @@ def antlrOutputDirLy = file("$buildDir/generated/org/luwrain/anylr/ly")
 def antlrOutputDirJava = file("$buildDir/generated/org/luwrain/antlr/java")
 
 task generateLexer(type: org.gradle.api.plugins.antlr.AntlrTask) {
-	source = file('src/main/antlr4/org/luwrain/antlr/js/JavaScriptLexer.g4')
-	outputDirectory = antlrOutputDirJs
-	arguments += ['-visitor', '-long-messages', '-package', 'org.luwrain.antlr.js']
+  source = file('src/main/antlr4/org/luwrain/antlr/js/JavaScriptLexer.g4')
+  outputDirectory = antlrOutputDirJs
+  arguments += ['-visitor', '-long-messages', '-package', 'org.luwrain.antlr.js']
 }
 
 task generateParser(type: org.gradle.api.plugins.antlr.AntlrTask) {
-	source = file('src/main/antlr4/org/luwrain/antlr/js/JavaScriptParser.g4')
-	outputDirectory = antlrOutputDirJs
-	arguments += ['-visitor', '-long-messages', '-package', 'org.luwrain.antlr.js']
-	dependsOn generateLexer
+  source = file('src/main/antlr4/org/luwrain/antlr/js/JavaScriptParser.g4')
+  outputDirectory = antlrOutputDirJs
+  arguments += ['-visitor', '-long-messages', '-package', 'org.luwrain.antlr.js']
+  dependsOn generateLexer
 }
 
 task generateLilypondGrammar(type: org.gradle.api.plugins.antlr.AntlrTask) {
-	source = fileTree('src/main/antlr4/org/luwrain/antlr/ly') {
-		include '*.g4'
-	}
+  source = fileTree('src/main/antlr4/org/luwrain/antlr/ly') {
+  include '*.g4'
+}
 	outputDirectory = antlrOutputDirLy
 	arguments += ['-visitor', '-long-messages', '-package', 'org.luwrain.antlr.ly']
 }
