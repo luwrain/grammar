@@ -1,5 +1,6 @@
 plugins {
   id 'java-library'
+  id 'maven-publish'
   id 'antlr'
 }
 
@@ -72,4 +73,21 @@ sourceSets {
 jar {
   archiveBaseName.set('luwrain-grammar')
   archiveVersion.set(null)
+}
+
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      groupId = 'org.luwrain'
+      artifactId = 'luwrain-grammar'
+      version = ver.lwr
+      from components.java
+    }
+  }
+  repositories {
+    maven {
+      url = uri(mavenDestRepo)
+    }
+  }
 }
