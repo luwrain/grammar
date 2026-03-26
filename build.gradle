@@ -3,22 +3,23 @@ plugins {
   id 'antlr'
 }
 
+def antlrOutputDirJs = file("$buildDir/generated/org/luwrain/antlr/js")
+def antlrOutputDirLy = file("$buildDir/generated/org/luwrain/anylr/ly")
+def antlrOutputDirJava = file("$buildDir/generated/org/luwrain/antlr/java")
+
 dependencies {
   antlr libraries.antlr
   implementation libraries.antlr
   implementation libraries.antlrrt
   implementation project(":luwrain")
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+//  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+//  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+  testImplementation libraries.junit
 }
 
 tasks.named('generateGrammarSource') {
   enabled = true 
 }
-
-def antlrOutputDirJs = file("$buildDir/generated/org/luwrain/antlr/js")
-def antlrOutputDirLy = file("$buildDir/generated/org/luwrain/anylr/ly")
-def antlrOutputDirJava = file("$buildDir/generated/org/luwrain/antlr/java")
 
 task generateLexer(type: org.gradle.api.plugins.antlr.AntlrTask) {
   source = file('src/main/antlr4/org/luwrain/antlr/js/JavaScriptLexer.g4')
@@ -35,38 +36,38 @@ task generateParser(type: org.gradle.api.plugins.antlr.AntlrTask) {
 
 task generateLilypondGrammar(type: org.gradle.api.plugins.antlr.AntlrTask) {
   source = fileTree('src/main/antlr4/org/luwrain/antlr/ly') {
-  include '*.g4'
-}
-	outputDirectory = antlrOutputDirLy
-	arguments += ['-visitor', '-long-messages', '-package', 'org.luwrain.antlr.ly']
+    include '*.g4'
+  }
+  outputDirectory = antlrOutputDirLy
+  arguments += ['-visitor', '-long-messages', '-package', 'org.luwrain.antlr.ly']
 }
 
 task generateJavaGrammar(type: org.gradle.api.plugins.antlr.AntlrTask) {
-	source = fileTree('src/main/antlr4/org/luwrain/antlr/java') {
-		include '*.g4'
-	}
-	outputDirectory = antlrOutputDirJava
-	arguments += ['-visitor', '-long-messages', '-package', 'org.luwrain.antlr.java']
+  source = fileTree('src/main/antlr4/org/luwrain/antlr/java') {
+    include '*.g4'
+  }
+  outputDirectory = antlrOutputDirJava
+  arguments += ['-visitor', '-long-messages', '-package', 'org.luwrain.antlr.java']
 }
 
 tasks.named('compileJava') {
-	dependsOn generateLexer, generateParser, generateLilypondGrammar, generateJavaGrammar
+  dependsOn generateLexer, generateParser, generateLilypondGrammar, generateJavaGrammar
 }
 
 tasks.named('compileTestJava') {
-	dependsOn generateParser
+  dependsOn generateParser
 }
 
 tasks.test {
-	useJUnitPlatform()
+  useJUnitPlatform()
 }
 
 sourceSets {
-	main {
-		java {
-			srcDirs = ['src/main/java', "$buildDir/generated"]
-		}
-	}
+  main {
+    java {
+      srcDirs = ['src/main/java', "$buildDir/generated"]
+    }
+  }
 }
 jar {
   archiveBaseName.set('luwrain-grammar')
